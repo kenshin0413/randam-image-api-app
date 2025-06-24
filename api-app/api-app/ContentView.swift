@@ -20,6 +20,16 @@ struct ContentView: View {
         }
         .padding()
     }
+    
+    struct ImageInfo: Codable {
+        let id: String
+        let author: String
+        let width: Int
+        let height: Int
+        let url: String
+        let download_url: String
+    }
+    
     // https://note.com/dngri/n/n98ea0016049c
     func getData() async {
         do {
@@ -27,8 +37,12 @@ struct ContentView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             // dataをString型に変換する
             // https://qiita.com/SNQ-2001/items/41efeb0a9fb4fa898177
-            let dataString = String(data: data, encoding: .utf8)
-            print(dataString as Any)
+            // let dataString = String(data: data, encoding: .utf8)
+            let imageInfos = try JSONDecoder().decode([ImageInfo].self, from: data)
+            for info in imageInfos {
+                print("\"\(info.download_url)\"), randam_image_api_app.Picsum(id: \"\(info.id)\", author: \"\(info.author)\", width: \(info.width), height: \(info.height), url:")
+                print("\"\(info.url)\", download_url:")
+            }
         } catch {
             print("Error")
         }
