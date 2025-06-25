@@ -8,17 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var imageInfos: [ImageInfo] = []
     var body: some View {
-        VStack {
-            Button(action: {
-                Task {
-                    await getData()
+        NavigationStack {
+            List(imageInfos, id: \.id) { info in
+                NavigationLink(destination: DetailView(imageInfo: info)) {
+                    HStack {
+                        Text(info.id)
+                        Spacer()
+                        Text(info.author)
+                    }
                 }
-            }, label: {
-                Text("取得")
-            })
+            }
+            .task {
+                await getData()
+            }
         }
-        .padding()
     }
     
     struct ImageInfo: Codable {
@@ -34,8 +39,8 @@ struct ContentView: View {
         do {
             guard let url = URL(string: "https://picsum.photos/v2/list") else { return }
             let (data, _) = try await URLSession.shared.data(from: url)
-            let imageInfos: [ContentView.ImageInfo] = try JSONDecoder().decode([ImageInfo].self, from: data)
-            print(imageInfos)
+            let decodedData = try JSONDecoder().decode([ImageInfo].self, from: data)
+            imageInfos = decodedData
         } catch {
             print("Error")
         }
