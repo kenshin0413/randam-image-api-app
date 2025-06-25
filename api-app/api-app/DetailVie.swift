@@ -1,5 +1,5 @@
 //
-//  DetailVie.swift
+//  DetailView.swift
 //  api-app
 //
 //  Created by miyamotokenshin on R 7/06/25.

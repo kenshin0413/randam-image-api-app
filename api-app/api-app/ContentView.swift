@@ -13,9 +13,9 @@ struct ContentView: View {
         NavigationStack {
             List(imageInfos, id: \.id) { info in
                 NavigationLink(destination: DetailView(imageInfo: info)) {
-                    HStack {
+                    LabeledContent {
                         Text(info.id)
-                        Spacer()
+                    } label: {
                         Text(info.author)
                     }
                 }
