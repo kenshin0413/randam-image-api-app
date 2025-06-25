@@ -34,10 +34,8 @@ struct ContentView: View {
         do {
             guard let url = URL(string: "https://picsum.photos/v2/list") else { return }
             let (data, _) = try await URLSession.shared.data(from: url)
-            let imageInfos = try JSONDecoder().decode([ImageInfo].self, from: data)
-                print("\"\(imageInfos)\"), randam_image_api_app.Picsum(id: \"\(imageInfos)\", author: \"\(imageInfos)\", width: \(imageInfos), height: \(imageInfos), url:")
-                print("\"\(imageInfos)\", download_url:")
-    
+            let imageInfos: [ContentView.ImageInfo] = try JSONDecoder().decode([ImageInfo].self, from: data)
+            print(imageInfos)
         } catch {
             print("Error")
         }
