@@ -9,6 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var imageInfos: [ImageInfo] = []
+    // falseを基本として持たせないと最初からアラートが表示されてしまう
+    @State private var showErrorAlert = false
+    // エラーが起きてる原因によって文章が変わるから//@Stateが必要
+    @State private var errorMessage = ""
     var body: some View {
         NavigationStack {
             List(imageInfos, id: \.id) { info in
@@ -22,6 +26,11 @@ struct ContentView: View {
             }
             .task {
                 await getData()
+            }
+            .alert("エラー", isPresented: $showErrorAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage)
             }
         }
     }
@@ -42,7 +51,9 @@ struct ContentView: View {
             let decodedData = try JSONDecoder().decode([ImageInfo].self, from: data)
             imageInfos = decodedData
         } catch {
-            print("Error")
+            errorMessage = error.localizedDescription
+            showErrorAlert = true
+            
         }
     }
 }
